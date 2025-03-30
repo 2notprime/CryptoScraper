@@ -40,9 +40,9 @@ python -u .\src\crypto_name_scraper.py
 
 Phần 2: Crawl history
 
-````bash
-python -u .\src\crypto_history_scraper.py```
-````
+```bash
+python -u .\src\crypto_history_scraper.py
+```
 
 ## Kết quả
 
