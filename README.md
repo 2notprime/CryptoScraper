@@ -50,4 +50,4 @@ python -u .\src\crypto_history_scraper.py
 
 ## Kết quả
 
-Các file CSV sẽ được lưu trong thư mục `csv_data/`, mỗi file tương ứng với một mã crypto.
+Các file CSV sẽ được lưu trong thư mục `crypto_history/`, mỗi file tương ứng với một mã crypto.
