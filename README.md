@@ -32,6 +32,10 @@ HISTORY_DATA_DIR = "data/crypto_history"
 
 ## Cách sử dụng
 
+Lưu ý: Code hiện tại chỉ đang chạy mẫu 3 samples đầu để push data mẫu,
+nếu muốn chạy toàn bộ vui lòng xóa dòng 70: symbols = symbols[:3]
+trong file (src/crypto_history_scraper.py)
+
 Phần 1: Crawl symbols
 
 ```bash
