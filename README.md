@@ -1,4 +1,4 @@
-# Yahoo Finance CSV Scraper
+# Crypto Scraper
 
 ## Mô tả
 
