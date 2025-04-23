@@ -1,2 +1,6 @@
 requests
 bs4
+googlesearch-python
+html2text
+dotenv
+google-genai
