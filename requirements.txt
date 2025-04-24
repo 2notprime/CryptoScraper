@@ -4,3 +4,6 @@ googlesearch-python
 html2text
 dotenv
 google-genai
+uvicorn
+fastapi
+pydantic
