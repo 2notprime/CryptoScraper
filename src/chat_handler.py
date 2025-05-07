@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import os
+import sys
 import requests
 from googlesearch import search
 import html2text
@@ -11,13 +12,17 @@ from datetime import datetime
 from google import genai
 from google.genai import types
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+import config
+from src.preprocessing import CryptoPreprocessor
 
 load_dotenv()
 # Cấu hình API
 client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 model = "gemini-2.0-flash"
 
-
+crypto_preprocessor = CryptoPreprocessor(config.CRYPTO_FILENAME)
+crypto_symbols = crypto_preprocessor.get_tokens()
 # Define the function declaration for the model
 search_google = {
     "name": "search_google",
@@ -27,7 +32,7 @@ search_google = {
         "properties": {
             "query": {
                 "type": "string",
-                "enum": ["BTC", "ETH", "SOL", "DOGE", "XRP", "ADA", "DOT", "LINK", "BCH", "LTC"],
+                "enum": crypto_symbols[:100],
             },
         },
         "required": ["query"],
@@ -52,7 +57,12 @@ config_1 = types.GenerateContentConfig(
 class Classification:
     def __init__(self, client):
         self.client = client
-        
+    def load_crypto_history_prompt(self, symbol):
+        scraper = CryptoPreprocessor(config.CRYPTO_FILENAME)
+        data = scraper.load_crypto_history(symbol)
+        prompt = scraper.format_prompt(data, symbol)
+        return prompt
+    
     def search_google_function_call(self, query):
         try:
             # Initialize html2text
@@ -116,6 +126,7 @@ class Classification:
     # Send request with function declarations
     def chat_with_google(self, prompt):
         contents = f"""Bạn là một chuyên gia về tiền điện tử. Hãy dự đoán xu thế của thị trường tiền điện tử trong tương lai.
+        Cuối cùng phải có câu trả lời dự đoán xu thế của thị trường tiền điện tử trong tương lai.
         Câu hỏi:
         {prompt}"""
         response = self.client.models.generate_content(
@@ -129,9 +140,12 @@ class Classification:
             # print(f"Function to call: {function_call.name}")
             # print(f"Arguments: {function_call.args}")
             google_info = self.search_google_function_call(function_call.args["query"])
+            crypto_history_prompt = self.load_crypto_history_prompt(f"{function_call.args['query']}")
             content_with_google_info = f"""Bạn là một chuyên gia về tiền điện tử. Hãy dự đoán xu thế của thị trường tiền điện tử trong tương lai.
             Câu hỏi:
             {prompt}
+            Lịch sử giá gần nhất của {function_call.args["query"]}:
+            {crypto_history_prompt}
             Thông tin tìm kiếm trên google:
             {google_info}"""
             contents = content_with_google_info

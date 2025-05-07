@@ -7,3 +7,4 @@ google-genai
 uvicorn
 fastapi
 pydantic
+selenium
