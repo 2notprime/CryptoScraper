@@ -1,7 +1,7 @@
 import time
 import subprocess
-import sys
 import os
+import sys
 from datetime import datetime
 
 SCRIPT_PATH = os.path.join(os.path.dirname(__file__), "crypto_history_scraper.py")
