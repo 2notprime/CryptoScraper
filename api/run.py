@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 # Add the project root to Python path
 sys.path.append(str(Path(__file__).parent.parent))
+import config
 
 # Load environment variables
 load_dotenv()
@@ -15,7 +16,7 @@ def main():
     uvicorn.run(
         "api.app:app",
         host="0.0.0.0",
-        port=int(os.getenv("PORT", 6996)),
+        port=int(os.getenv("PORT", config.PORT_BACKEND)),
         reload=True  # Enable auto-reload during development
     )
 
